@@ -6,6 +6,18 @@
 * [Why are some Java features hard to understand?](#why-are-some-java-features-hard-to-understand)
 * [Why is similar code useful?](#why-is-similar-code-useful)
 * [Why are the javadoc comments sometimes not enough?](https://github.com/mmirwaldt/JavaFeaturesImitatedInExamples#why-are-the-javadoc-comments-sometimes-not-enough)
+* [Why is the word "imitated" and not "emulated" used in the name of this project?](#why-is-the-word-imitated-and-not-emulated-used-in-the-name-of-this-project)
+* [How do the examples look like?](#how-do-the-examples-look-like)
+* [Why are explaining comments missing in the examples?](#why-are-explaining-comments-missing-in-the-examples)
+* [Which Java features are covered by this project?](#which-java-features-are-covered-by-this-project)
+* [Why do some examples have got small numbers and other ones larger ones in their names?](#why-do-some-examples-have-got-small-numbers-and-other-ones-larger-ones-in-their-names)
+* [What if the projects has grown to 999 examples for one module?](#what-if-the-projects-has-grown-to-999-examples-for-one-module)
+* [What shall you do if you discover an error?](#what-shall-you-do-if-you-discover-an-error)
+* [What shall you do if you miss an example?](#what-shall-you-do-if-you-miss-an-example)
+* [What shall you do if you dislike this project?](#what-shall-you-do-if-you-dislike-this-project)
+* [How can you say thank you?](#how-can-you-say-thank-you)
+* [Who owns the copyright for this project?](#who-owns-the-copyright-for-this-project)
+* [How is this project licensed?](#how-is-this-project-licensed)
 
 ### What is this?
 
@@ -93,7 +105,7 @@ Every maven module in this project covers one Java feature. The current features
 
 Others will follow soon.
 
-### Why do some examples have got small numbers and other ones larger ones?
+### Why do some examples have got small numbers and other ones larger ones in their names?
 
 Easy examples tend to have a smaller number wile sophisticated ones prefer to use larger ones. This is intentional
 because beginners can start with the first examples while professionals can begin with the last examples. However, it
@@ -157,7 +169,7 @@ Your colleagues must have an **unbiased** look on this project on their own and 
 not. Emails with insulting comments are going to be ignored and immediately deleted. Moreover, the sender email address
 is going to be blocked.
 
-### How can you say thank you for me?
+### How can you say thank you?
 
 You can write me an email if the examples helped you a lot and tell me why shortly. This encourages me to spend enough
 time on this project besides all my other projects. And I would like to collect some testimonials. I would love to add
