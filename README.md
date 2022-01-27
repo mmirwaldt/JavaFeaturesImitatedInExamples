@@ -1,6 +1,13 @@
 # Java features imitated in examples
 
-#### What is this?
+### Table of contents
+
+* [What is this?](#what-is-this)
+* [Why are some Java features hard to understand?](#why-are-some-java-features-hard-to-understand)
+* [Why is similar code useful?](#why-is-similar-code-useful)
+* [Why are the javadoc comments sometimes not enough?](https://github.com/mmirwaldt/JavaFeaturesImitatedInExamples#why-are-the-javadoc-comments-sometimes-not-enough)
+
+### What is this?
 
 This project wants to help Java developers to understand some Java features by examples with similar code. These
 examples show how these features can be used **and** offers similar code in order to explain how those features work.
@@ -47,7 +54,7 @@ Sometimes they even provide some small code snippets and that is very good. They
 is too much for javadoc comments though. Many Java features can be used in many contexts so that listing them all is
 impossible.
 
-### Why is this project called "imitated" and not "emulated"?
+### Why is the word "imitated" and not "emulated" used in the name of this project?
 
 If you look up the different meanings of the words "imitate" and "emulate", you will find this explanation:
 
