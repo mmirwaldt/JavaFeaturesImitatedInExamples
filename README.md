@@ -138,13 +138,6 @@ Please make sure that you have checked these requirements for adding a new examp
 
 * It hasn't been covered by one of the existing examples in order to avoid duplicates
 * It must focus on as few features as possible to keep it simple
-* It must be one representative feature for a group of similar features if they cannot be used at the same time or if
-  each of them alone is very complicated. e.g. streams support 3 different methods for matchers of the same group:    
-  allMatch(), anyMatch(), noneMatch()   
-  We don't want to have one example for each of them. We prefer to select one of them for one example because the other
-  two examples would nearly look like the same. <br/>
-  e.g. one exception to this rule: functions (java.util.function.Function) support andThen() and compose().      
-  We can use both methods in one example at the same time because it doesn't really make the example more complicated.
 * It must not be a large program to avoid an abuse of this feature e.g. a stream expression as a program to read out a
   text file and to find the top ten of the most frequently used words.
 * Similar code must exist to imitate the code for that feature and not be too complicated.<br/> E.g. writing code for
@@ -154,9 +147,6 @@ Please make sure that you have checked these requirements for adding a new examp
 * It can be a bit exotic but not too exotic if it uses a rarely used feature or a very new feature. <br/> E.g. only a
   few developers know the stream method "mapMulti()" which makes it exotic. However, this method can be very useful in
   some edge case and avoid complicated code.
-* It must be a good example which convinces readers that the feature is useful. <br/> e.g. using (tail-call) recursion
-  to calculate the faculty demonstrates (tail-call) recursion but it is bad because a loop can calculate the faculty
-  faster with a few lines of code.
 
 Of course, some criteria might be a bit subjective or arbitrary. I still think most of them are objective *enough* to
 judge whether it's worth adding a new example or not.
