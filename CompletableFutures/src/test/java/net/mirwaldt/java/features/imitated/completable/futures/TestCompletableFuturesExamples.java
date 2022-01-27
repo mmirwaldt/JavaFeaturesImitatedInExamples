@@ -20,14 +20,14 @@ import java.util.stream.Stream;
 import static net.mirwaldt.java.features.imitated.util.TestUtils.argumentsForPackage;
 
 @SuppressWarnings("unused")
-public class TestStreamExamples {
-    public static Stream<Arguments> streamExamples() {
-        return argumentsForPackage(TestStreamExamples.class.getPackageName());
+public class TestCompletableFuturesExamples {
+    public static Stream<Arguments> futureExamples() {
+        return argumentsForPackage(TestCompletableFuturesExamples.class.getPackageName());
     }
 
     @ParameterizedTest(name = "{index}: {0}")
-    @MethodSource("streamExamples")
-    void testStreamExample(String sampleClassName) {
+    @MethodSource("futureExamples")
+    void testCompletableFuturesExample(String sampleClassName) {
         TestUtils.testMain(sampleClassName);
     }
 }
