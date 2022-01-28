@@ -10,11 +10,13 @@
 
 package net.mirwaldt.java.features.imitated.completable.futures;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import static net.mirwaldt.java.features.imitated.completable.futures.util.Utils.callUnchecked;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
 public class Example_07_supplyAsync_thenApply {

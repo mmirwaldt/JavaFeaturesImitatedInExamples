@@ -15,6 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static net.mirwaldt.java.features.imitated.util.TestUtils.argumentsForPackage;
@@ -22,12 +23,12 @@ import static net.mirwaldt.java.features.imitated.util.TestUtils.argumentsForPac
 @SuppressWarnings("unused")
 public class TestCompletableFuturesExamples {
     public static Stream<Arguments> futureExamples() {
-        return argumentsForPackage(TestCompletableFuturesExamples.class.getPackageName());
+        return argumentsForPackage(TestCompletableFuturesExamples.class.getPackageName(), Collections.emptyList());
     }
 
-    @ParameterizedTest(name = "{index}: {0}")
+    @ParameterizedTest(name = "{index}: {0}, isException={1}")
     @MethodSource("futureExamples")
-    void testCompletableFuturesExample(String sampleClassName) {
-        TestUtils.testMain(sampleClassName);
+    void testCompletableFuturesExample(String sampleClassName, boolean isException) {
+        TestUtils.testMain(sampleClassName, isException);
     }
 }
