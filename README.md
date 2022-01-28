@@ -5,7 +5,7 @@
 * [What is this?](#what-is-this)
 * [Why are some Java features hard to understand?](#why-are-some-java-features-hard-to-understand)
 * [Why is similar code useful?](#why-is-similar-code-useful)
-* [Why are the javadoc comments sometimes not enough?](https://github.com/mmirwaldt/JavaFeaturesImitatedInExamples#why-are-the-javadoc-comments-sometimes-not-enough)
+* [Why are the javadoc comments sometimes not enough?](#why-are-the-javadoc-comments-sometimes-not-enough)
 * [Why is the word "imitated" and not "emulated" used in the name of this project?](#why-is-the-word-imitated-and-not-emulated-used-in-the-name-of-this-project)
 * [How do the examples look like?](#how-do-the-examples-look-like)
 * [Why are explaining comments missing in the examples?](#why-are-explaining-comments-missing-in-the-examples)
