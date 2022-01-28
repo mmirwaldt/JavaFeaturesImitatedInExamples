@@ -168,7 +168,7 @@ run them to gain experience.
 
 ### Who owns the copyright for this project?
 
-Michael Mirwaldt owns the copyright (c) for this project since 2021. All rights reserved to him.
+Michael Mirwaldt owns the copyright (c) for this project since 2022. All rights reserved to him.
 
 ### How is this project licensed?
 
