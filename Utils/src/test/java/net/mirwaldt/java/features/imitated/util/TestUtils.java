@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestUtils {
-    public static Stream<Arguments> argumentsForPackage(String packageName) {
+    public static Stream<Arguments> argumentsForPackage(String packageName, List<String> exceptions) {
         String packagePath = packageName.replace(".", "/");
         File workingDirFile = new File(""); // working dir
         String workingDirString = workingDirFile.getAbsolutePath().replace("" + File.separatorChar, "/");
@@ -36,10 +36,10 @@ public class TestUtils {
                 classesDirFile.listFiles(pathName-> pathName.getName().endsWith(".class"))))
                 .map(f -> packageName + "." + f.getName().replace(".class", ""))
                 .filter(name -> !name.contains("$"))
-                .map(Arguments::of);
+                .map(type -> Arguments.of(type, exceptions.contains(type)));
     }
 
-    public static void testMain(String sampleClassName) {
+    public static void testMain(String sampleClassName, boolean isException) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintStream backup = System.out;
         System.setOut(new PrintStream(byteArrayOutputStream));
@@ -51,7 +51,9 @@ public class TestUtils {
             List<String> lines = List.of(output.split("" + System.lineSeparator()));
             int indexOfMiddleLine = lines.indexOf(middleLine());
             if(0 < indexOfMiddleLine) {
-                assertEquals(lines.subList(0, indexOfMiddleLine), lines.subList(indexOfMiddleLine + 1, lines.size()));
+                if(!isException) {
+                    assertEquals(lines.subList(0, indexOfMiddleLine), lines.subList(indexOfMiddleLine + 1, lines.size()));
+                }
             } else {
                 fail("Cannot find middle line in output for sample class '" + sampleClassName + "'.");
             }
