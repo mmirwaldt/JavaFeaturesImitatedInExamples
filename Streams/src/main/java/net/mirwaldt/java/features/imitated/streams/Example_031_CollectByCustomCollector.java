@@ -23,7 +23,7 @@ import java.util.stream.Collector.Characteristics;
 
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_031_CustomCollector {
+public class Example_031_CollectByCustomCollector {
     public static void main(String[] args) {
         Map<String, List<Integer>> multiMap = Map.of(
                 "M", List.of(1, 2, 3),
@@ -66,7 +66,7 @@ public class Example_031_CustomCollector {
     }
 
     static BinaryOperator<Map<Integer, List<String>>> combiner() {
-        return (a, b) -> null; // we don't use the combiner because our stream does not run in parallel
+        return (a, b) -> null; // we don't implement the combiner because our stream does not run in parallel
     }
 
     static Function<Map<Integer, List<String>>, Map<Integer, List<String>>> finisher() {
