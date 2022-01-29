@@ -10,23 +10,21 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.IntSummaryStatistics;
+import java.util.Comparator;
 import java.util.List;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-import static java.util.stream.Collectors.summarizingInt;
+import static java.util.stream.Collectors.maxBy;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_026_CollectBySummarizingInts {
+public class Example_026_CollectByMax {
     public static void main(String[] args) {
-        List<Integer> ints = List.of(1, 3, 4, 0, 2, 5, 6);
+        var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want a map with the remainder of an int divided by 3 as key and the sum of all ints with the same remainder:
+        // we want the longest name:
 
         // with stream
-        var streamResult = ints.stream()
-                .collect(summarizingInt(i -> i));
+        var streamResult = names.stream()
+                .collect(maxBy(Comparator.comparingInt(String::length))).orElse("Unknown");
         System.out.println(streamResult);
 
 
@@ -34,17 +32,12 @@ public class Example_026_CollectBySummarizingInts {
 
 
         // without stream
-        long count = 0L;
-        long sum = 0L;
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-        for (int i : ints) {
-            count++;
-            sum += i;
-            min = min(min, i);
-            max = max(max, i);
+        var nonStreamResult = "Unknown";
+        for (String name : names) {
+            if("Unknown".equals(nonStreamResult) || nonStreamResult.length() < name.length()) {
+                nonStreamResult = name;
+            }
         }
-        IntSummaryStatistics nonStreamResult = new IntSummaryStatistics(count, min, max, sum);
         System.out.println(nonStreamResult);
     }
 }

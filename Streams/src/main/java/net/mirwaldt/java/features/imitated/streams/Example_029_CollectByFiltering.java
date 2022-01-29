@@ -10,21 +10,22 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.maxBy;
+import static java.util.stream.Collectors.filtering;
+import static java.util.stream.Collectors.toList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_025_CollectByMax {
+public class Example_029_CollectByFiltering {
     public static void main(String[] args) {
         var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want the longest name:
+        // we want a list with only names starting with "M":
 
         // with stream
         var streamResult = names.stream()
-                .collect(maxBy(Comparator.comparingInt(String::length))).orElse("Unknown");
+                .collect(filtering(name -> name.startsWith("M"), toList()));
         System.out.println(streamResult);
 
 
@@ -32,10 +33,10 @@ public class Example_025_CollectByMax {
 
 
         // without stream
-        var nonStreamResult = "Unknown";
+        var nonStreamResult = new ArrayList<>();
         for (String name : names) {
-            if("Unknown".equals(nonStreamResult) || nonStreamResult.length() < name.length()) {
-                nonStreamResult = name;
+            if(name.startsWith("M")) {
+                nonStreamResult.add(name);
             }
         }
         System.out.println(nonStreamResult);
