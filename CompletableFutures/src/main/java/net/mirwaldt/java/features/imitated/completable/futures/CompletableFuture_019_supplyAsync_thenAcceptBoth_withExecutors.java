@@ -13,48 +13,51 @@ package net.mirwaldt.java.features.imitated.completable.futures;
 import net.mirwaldt.java.features.imitated.completable.futures.util.DaemonThreadFactory;
 
 import java.util.concurrent.*;
-import java.util.function.BiFunction;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import static net.mirwaldt.java.features.imitated.completable.futures.util.Utils.callUnchecked;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_12_supplyAsync_thenCombine_withExecutors {
+public class CompletableFuture_019_supplyAsync_thenAcceptBoth_withExecutors {
     private static final Supplier<String> helloSupplier = () -> "Hello ";
     private static final Supplier<String> worldSupplier = () -> "World!";
-    private static final BiFunction<String, String, String> concatBiFunction = String::concat;
+
+    private static final BiConsumer<String, String> printlnConcatStringBiConsumer =
+            (s1, s2) -> System.out.println(s1.concat(s2));
 
     private static final Executor supplyAsyncExecutor =
             Executors.newSingleThreadExecutor(new DaemonThreadFactory());
-    private static final Executor supplyAsyncAndThenCombineExecutor =
+    private static final Executor supplyAsyncAndThenAcceptBothExecutor =
             Executors.newSingleThreadExecutor(new DaemonThreadFactory());
 
     @SuppressWarnings("Convert2MethodRef")
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        // with CompletableFutures
-        CompletableFuture<String> helloFuture = CompletableFuture.supplyAsync(worldSupplier, supplyAsyncExecutor);
-        CompletableFuture<String> combinedFuture = CompletableFuture
-                .supplyAsync(helloSupplier, supplyAsyncAndThenCombineExecutor)
-                .thenCombine(helloFuture, concatBiFunction);
-        System.out.println(combinedFuture.get());
+        // with CompletableFuture
+        CompletableFuture<String> worldFuture = CompletableFuture.supplyAsync(worldSupplier, supplyAsyncExecutor);
+        CompletableFuture<Void> completableFuture = CompletableFuture
+                .supplyAsync(helloSupplier, supplyAsyncAndThenAcceptBothExecutor)
+                .thenAcceptBoth(worldFuture, printlnConcatStringBiConsumer);
+        completableFuture.get();
 
 
         System.out.println(middleLine());
 
 
-        // without CompletableFutures
+        // without CompletableFuture
         BlockingQueue<String> supplyAsyncQueue = new ArrayBlockingQueue<>(1);
         supplyAsyncExecutor.execute(() -> supplyAsyncQueue.offer(helloSupplier.get()));
 
-        BlockingQueue<String> supplyAsyncAndThenCombineQueue = new ArrayBlockingQueue<>(1);
-        supplyAsyncAndThenCombineExecutor.execute(() -> supplyAsyncAndThenCombineQueue.offer(worldSupplier.get()));
+        BlockingQueue<String> supplyAsyncAndThenAcceptBothQueue = new ArrayBlockingQueue<>(1);
+        supplyAsyncAndThenAcceptBothExecutor.execute(() -> supplyAsyncAndThenAcceptBothQueue.offer(worldSupplier.get()));
 
-        BlockingQueue<String> thenCombineQueue = new ArrayBlockingQueue<>(1);
-        supplyAsyncAndThenCombineExecutor.execute(() -> {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        supplyAsyncAndThenAcceptBothExecutor.execute(() -> {
             String firstResult = callUnchecked(() -> supplyAsyncQueue.take());
-            String secondResult = callUnchecked(() -> supplyAsyncAndThenCombineQueue.take());
-            thenCombineQueue.offer(concatBiFunction.apply(firstResult, secondResult));
+            String secondResult = callUnchecked(() -> supplyAsyncAndThenAcceptBothQueue.take());
+            printlnConcatStringBiConsumer.accept(firstResult, secondResult);
+            countDownLatch.countDown();
         });
-        System.out.println(thenCombineQueue.take());
+        countDownLatch.await();
     }
 }

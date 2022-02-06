@@ -14,19 +14,22 @@ import net.mirwaldt.java.features.imitated.completable.futures.util.DaemonThread
 
 import java.util.concurrent.*;
 
+import static net.mirwaldt.java.features.imitated.completable.futures.util.Utils.join;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_06_runAsync_thenRunAsync_withExecutors {
+public class CompletableFuture_005_runAsync_thenRunAsync_withExecutor {
     private static final Runnable printHelloWorld = () -> System.out.println("Hello World!");
-    private static final Runnable printHelloWorldAgain = () -> System.out.println("Hello World again!");
+    private static final Runnable printHelloUniverse = () -> System.out.println("Hello Universe!");
 
-    private static final Executor runAsyncExecutor = Executors.newSingleThreadExecutor(new DaemonThreadFactory());
-    private static final Executor thenRunAsyncExecutor = Executors.newSingleThreadExecutor(new DaemonThreadFactory());
+    private static final Executor runAsyncExecutor =
+            Executors.newSingleThreadExecutor(new DaemonThreadFactory());
+    private static final Executor thenRunAsyncExecutor =
+            Executors.newSingleThreadExecutor(new DaemonThreadFactory());
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // with CompletableFuture
         CompletableFuture.runAsync(printHelloWorld, runAsyncExecutor)
-                .thenRunAsync(printHelloWorldAgain, thenRunAsyncExecutor)
+                .thenRunAsync(printHelloUniverse, thenRunAsyncExecutor)
                 .get();
 
 
@@ -34,18 +37,17 @@ public class Example_06_runAsync_thenRunAsync_withExecutors {
 
 
         // without CompletableFuture
-        CountDownLatch runAsyncSignal = new CountDownLatch(1);
+        CountDownLatch runAsyncLatch = new CountDownLatch(1);
         runAsyncExecutor.execute(() -> {
             printHelloWorld.run();
-            runAsyncSignal.countDown();
+            runAsyncLatch.countDown();
         });
-        runAsyncSignal.await();
-
-        CountDownLatch thenRunAsyncSignal = new CountDownLatch(1);
+        CountDownLatch thenRunAsyncLatch = new CountDownLatch(1);
         thenRunAsyncExecutor.execute(() -> {
-            printHelloWorldAgain.run();
-            thenRunAsyncSignal.countDown();
+            join(runAsyncLatch::await);
+            printHelloUniverse.run();
+            thenRunAsyncLatch.countDown();
         });
-        thenRunAsyncSignal.await();
+        thenRunAsyncLatch.await();
     }
 }

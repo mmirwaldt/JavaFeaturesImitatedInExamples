@@ -10,32 +10,29 @@
 
 package net.mirwaldt.java.features.imitated.completable.futures;
 
-import net.mirwaldt.java.features.imitated.completable.futures.util.DaemonThreadFactory;
-
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_02_runAsync_withExecutor {
-    private static final Runnable printHelloWorld = () -> System.out.println("Hello World!");
-
-    private static final Executor executor = Executors.newSingleThreadExecutor(new DaemonThreadFactory());
+public class CompletableFuture_006_supplyAsync {
+    private static final Supplier<String> stringSupplier = () -> "Hello World!";
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // with CompletableFuture
-        CompletableFuture.runAsync(printHelloWorld, executor)
-                .get();
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(stringSupplier);
+        System.out.println(completableFuture.get());
 
 
         System.out.println(middleLine());
 
 
         // without CompletableFuture
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        executor.execute(() -> {
-            printHelloWorld.run();
-            countDownLatch.countDown();
-        });
-        countDownLatch.await();
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+        Future<String> future = commonPool.submit(stringSupplier::get);
+        System.out.println(future.get());
     }
 }

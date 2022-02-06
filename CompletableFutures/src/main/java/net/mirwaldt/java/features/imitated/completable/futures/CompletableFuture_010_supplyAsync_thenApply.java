@@ -10,21 +10,25 @@
 
 package net.mirwaldt.java.features.imitated.completable.futures;
 
-import net.mirwaldt.java.features.imitated.completable.futures.util.DaemonThreadFactory;
-
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_04_supplyAsync_withExecutor {
+public class CompletableFuture_010_supplyAsync_thenApply {
     private static final Supplier<String> stringSupplier = () -> "Hello World!";
+    private static final UnaryOperator<String> stringOperator = String::toUpperCase;
 
-    private static final Executor executor = Executors.newSingleThreadExecutor(new DaemonThreadFactory());
-
+    @SuppressWarnings("Convert2MethodRef")
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // with CompletableFuture
-        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(stringSupplier, executor);
+        CompletableFuture<String> completableFuture = CompletableFuture
+                .supplyAsync(stringSupplier)
+                .thenApply(stringOperator);
         System.out.println(completableFuture.get());
 
 
@@ -32,8 +36,10 @@ public class Example_04_supplyAsync_withExecutor {
 
 
         // without CompletableFuture
-        BlockingQueue<String> supplyAsyncQueue = new ArrayBlockingQueue<>(1);
-        executor.execute(() -> supplyAsyncQueue.offer(stringSupplier.get()));
-        System.out.println(supplyAsyncQueue.take());
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+        Future<String> supplyAsyncFuture = commonPool.submit(stringSupplier::get);
+        String supplySyncResult = supplyAsyncFuture.get();
+        Future<String> thenComposeFuture = commonPool.submit(() -> stringOperator.apply(supplySyncResult));
+        System.out.println(thenComposeFuture.get());
     }
 }

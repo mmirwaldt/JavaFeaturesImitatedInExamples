@@ -13,37 +13,27 @@ package net.mirwaldt.java.features.imitated.completable.futures;
 import net.mirwaldt.java.features.imitated.completable.futures.util.DaemonThreadFactory;
 
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_14_supplyAsync_thenAccept_withExecutors {
+public class CompletableFuture_007_supplyAsync_withExecutor {
     private static final Supplier<String> stringSupplier = () -> "Hello World!";
-    private static final Consumer<String> printlnConsumer = System.out::println;
 
-    private static final Executor supplyAsyncAndThenAcceptExecutor =
-            Executors.newSingleThreadExecutor(new DaemonThreadFactory());
+    private static final Executor executor = Executors.newSingleThreadExecutor(new DaemonThreadFactory());
 
-    @SuppressWarnings("Convert2MethodRef")
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // with CompletableFuture
-        CompletableFuture<Void> completableFuture = CompletableFuture
-                .supplyAsync(stringSupplier, supplyAsyncAndThenAcceptExecutor)
-                .thenAccept(printlnConsumer);
-        completableFuture.get();
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(stringSupplier, executor);
+        System.out.println(completableFuture.get());
 
 
         System.out.println(middleLine());
 
 
         // without CompletableFuture
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        supplyAsyncAndThenAcceptExecutor.execute(() -> {
-            String result = stringSupplier.get();
-            printlnConsumer.accept(result);
-            countDownLatch.countDown();
-        });
-        countDownLatch.await();
+        BlockingQueue<String> supplyAsyncQueue = new ArrayBlockingQueue<>(1);
+        executor.execute(() -> supplyAsyncQueue.offer(stringSupplier.get()));
+        System.out.println(supplyAsyncQueue.take());
     }
 }

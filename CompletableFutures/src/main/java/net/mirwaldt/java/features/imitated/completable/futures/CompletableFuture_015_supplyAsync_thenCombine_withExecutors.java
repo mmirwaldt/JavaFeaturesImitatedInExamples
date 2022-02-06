@@ -10,27 +10,31 @@
 
 package net.mirwaldt.java.features.imitated.completable.futures;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
+import net.mirwaldt.java.features.imitated.completable.futures.util.DaemonThreadFactory;
+
+import java.util.concurrent.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static net.mirwaldt.java.features.imitated.completable.futures.util.Utils.callUnchecked;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_11_supplyAsync_thenCombine {
+public class CompletableFuture_015_supplyAsync_thenCombine_withExecutors {
     private static final Supplier<String> helloSupplier = () -> "Hello ";
     private static final Supplier<String> worldSupplier = () -> "World!";
     private static final BiFunction<String, String, String> concatBiFunction = String::concat;
 
+    private static final Executor supplyAsyncExecutor =
+            Executors.newSingleThreadExecutor(new DaemonThreadFactory());
+    private static final Executor supplyAsyncAndThenCombineExecutor =
+            Executors.newSingleThreadExecutor(new DaemonThreadFactory());
+
     @SuppressWarnings("Convert2MethodRef")
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // with CompletableFutures
-        CompletableFuture<String> helloFuture = CompletableFuture.supplyAsync(worldSupplier);
+        CompletableFuture<String> helloFuture = CompletableFuture.supplyAsync(worldSupplier, supplyAsyncExecutor);
         CompletableFuture<String> combinedFuture = CompletableFuture
-                .supplyAsync(helloSupplier)
+                .supplyAsync(helloSupplier, supplyAsyncAndThenCombineExecutor)
                 .thenCombine(helloFuture, concatBiFunction);
         System.out.println(combinedFuture.get());
 
@@ -39,14 +43,18 @@ public class Example_11_supplyAsync_thenCombine {
 
 
         // without CompletableFutures
-        ForkJoinPool commonPool = ForkJoinPool.commonPool();
-        Future<String> supplyAsyncFuture = commonPool.submit(helloSupplier::get);
-        Future<String> supplyAsyncInThenCombineFuture = commonPool.submit(worldSupplier::get);
-        Future<String> thenCombineFuture = commonPool.submit(() -> {
-            String firstResult = callUnchecked(() -> supplyAsyncFuture.get());
-            String secondResult = callUnchecked(() -> supplyAsyncInThenCombineFuture.get());
-            return concatBiFunction.apply(firstResult, secondResult);
+        BlockingQueue<String> supplyAsyncQueue = new ArrayBlockingQueue<>(1);
+        supplyAsyncExecutor.execute(() -> supplyAsyncQueue.offer(helloSupplier.get()));
+
+        BlockingQueue<String> supplyAsyncAndThenCombineQueue = new ArrayBlockingQueue<>(1);
+        supplyAsyncAndThenCombineExecutor.execute(() -> supplyAsyncAndThenCombineQueue.offer(worldSupplier.get()));
+
+        BlockingQueue<String> thenCombineQueue = new ArrayBlockingQueue<>(1);
+        supplyAsyncAndThenCombineExecutor.execute(() -> {
+            String firstResult = callUnchecked(() -> supplyAsyncQueue.take());
+            String secondResult = callUnchecked(() -> supplyAsyncAndThenCombineQueue.take());
+            thenCombineQueue.offer(concatBiFunction.apply(firstResult, secondResult));
         });
-        System.out.println(thenCombineFuture.get());
+        System.out.println(thenCombineQueue.take());
     }
 }

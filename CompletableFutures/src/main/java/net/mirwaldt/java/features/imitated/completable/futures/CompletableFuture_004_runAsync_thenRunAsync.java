@@ -11,25 +11,22 @@
 package net.mirwaldt.java.features.imitated.completable.futures;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
+import static net.mirwaldt.java.features.imitated.completable.futures.util.Utils.join;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_07_supplyAsync_thenApply {
-    private static final Supplier<String> stringSupplier = () -> "Hello World!";
-    private static final UnaryOperator<String> stringOperator = String::toUpperCase;
+public class CompletableFuture_004_runAsync_thenRunAsync {
+    private static final Runnable printHelloWorld = () -> System.out.println("Hello World!");
+    private static final Runnable printHelloUniverse = () -> System.out.println("Hello Universe!");
 
-    @SuppressWarnings("Convert2MethodRef")
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // with CompletableFuture
-        CompletableFuture<String> completableFuture = CompletableFuture
-                .supplyAsync(stringSupplier)
-                .thenApply(stringOperator);
-        System.out.println(completableFuture.get());
+        CompletableFuture.runAsync(printHelloWorld)
+                .thenRunAsync(printHelloUniverse)
+                .get();
 
 
         System.out.println(middleLine());
@@ -37,9 +34,17 @@ public class Example_07_supplyAsync_thenApply {
 
         // without CompletableFuture
         ForkJoinPool commonPool = ForkJoinPool.commonPool();
-        Future<String> supplyAsyncFuture = commonPool.submit(stringSupplier::get);
-        String supplySyncResult = supplyAsyncFuture.get();
-        Future<String> thenComposeFuture = commonPool.submit(() -> stringOperator.apply(supplySyncResult));
-        System.out.println(thenComposeFuture.get());
+        CountDownLatch runAsyncLatch = new CountDownLatch(1);
+        commonPool.execute(() -> {
+            printHelloWorld.run();
+            runAsyncLatch.countDown();
+        });
+        CountDownLatch thenRunAsyncLatch = new CountDownLatch(1);
+        commonPool.execute(() -> {
+            join(runAsyncLatch::await);
+            printHelloUniverse.run();
+            thenRunAsyncLatch.countDown();
+        });
+        thenRunAsyncLatch.await();
     }
 }

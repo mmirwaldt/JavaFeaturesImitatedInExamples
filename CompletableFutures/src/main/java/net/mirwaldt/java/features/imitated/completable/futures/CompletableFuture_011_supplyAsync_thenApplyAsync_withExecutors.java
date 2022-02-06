@@ -19,7 +19,7 @@ import java.util.function.UnaryOperator;
 import static net.mirwaldt.java.features.imitated.completable.futures.util.Utils.callUnchecked;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_08_supplyAsync_thenApplyAsync_withExecutors {
+public class CompletableFuture_011_supplyAsync_thenApplyAsync_withExecutors {
     private static final Supplier<String> stringSupplier = () -> "Hello World!";
     private static final UnaryOperator<String> stringOperator = String::toUpperCase;
 

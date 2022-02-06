@@ -17,31 +17,30 @@ import java.util.concurrent.ForkJoinPool;
 
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_01_runAsync {
+public class CompletableFuture_001_runAsync {
     private static final Runnable printHelloWorld = () -> System.out.println("Hello World!");
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // with CompletableFuture
-        CompletableFuture.runAsync(printHelloWorld)
-                .get();
+//        CompletableFuture.runAsync(printHelloWorld)
+//                .get();
 
+        System.out.println(CompletableFuture
+                .runAsync(() -> System.out.println("x"))
+                .thenApply(x -> x.equals(""))
+                .get()
+        );
 
-        System.out.println(middleLine());
+//        System.out.println(middleLine());
 
 
         // without CompletableFuture
-        if (ForkJoinPool.getCommonPoolParallelism() > 1) {
-            ForkJoinPool commonPool = ForkJoinPool.commonPool();
-            CountDownLatch countDownLatch = new CountDownLatch(1);
-            commonPool.execute(() -> {
-                printHelloWorld.run();
-                countDownLatch.countDown();
-            });
-            countDownLatch.await();
-        } else {
-            Thread thread = new Thread(printHelloWorld);
-            thread.start();
-            thread.join();
-        }
+//        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+//        CountDownLatch countDownLatch = new CountDownLatch(1);
+//        commonPool.execute(() -> {
+//            printHelloWorld.run();
+//            countDownLatch.countDown();
+//        });
+//        countDownLatch.await();
     }
 }
