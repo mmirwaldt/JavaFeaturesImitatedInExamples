@@ -10,23 +10,24 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.IntSummaryStatistics;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-import static java.util.stream.Collectors.summarizingInt;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_028_CollectBySummarizingInts {
+public class Stream_020_CollectByGroupingToCounts {
+    @SuppressWarnings("SpellCheckingInspection")
     public static void main(String[] args) {
-        List<Integer> ints = List.of(1, 3, 4, 0, 2, 5, 6);
+        List<Integer> ints = List.of(0, 2, 1, 1, 2, 2);
 
-        // we want a map with the remainder of an int divided by 3 as key and the sum of all ints with the same remainder:
+        // we want a map with the int element as key and its frequency in the int list as value:
 
         // with stream
-        var streamResult = ints.stream()
-                .collect(summarizingInt(i -> i));
+        Map<Integer, Long> streamResult = ints.stream()
+                .collect(groupingBy(i -> i, counting()));
         System.out.println(streamResult);
 
 
@@ -34,17 +35,11 @@ public class Example_028_CollectBySummarizingInts {
 
 
         // without stream
-        long count = 0L;
-        long sum = 0L;
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
+        Map<Integer, Long> nonStreamResult = new HashMap<>();
         for (int i : ints) {
-            count++;
-            sum += i;
-            min = min(min, i);
-            max = max(max, i);
+            long count = nonStreamResult.getOrDefault(i, 0L);
+            nonStreamResult.put(i, count + 1);
         }
-        IntSummaryStatistics nonStreamResult = new IntSummaryStatistics(count, min, max, sum);
         System.out.println(nonStreamResult);
     }
 }

@@ -10,21 +10,21 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.maxBy;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_026_CollectByMax {
+public class Stream_010_CollectToLinkedHashSet {
     public static void main(String[] args) {
-        var names = List.of("Heinz", "Michael", "Brian", "Marc");
+        var names = new String[]{"Heinz", "Michael", "Brian", "Marc", "Michael"};
 
-        // we want the longest name:
+        // we want a linked hash set of strings from a string array:
 
         // with stream
-        var streamResult = names.stream()
-                .collect(maxBy(Comparator.comparingInt(String::length))).orElse("Unknown");
+        var streamResult = Arrays.stream(names)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
         System.out.println(streamResult);
 
 
@@ -32,11 +32,9 @@ public class Example_026_CollectByMax {
 
 
         // without stream
-        var nonStreamResult = "Unknown";
+        var nonStreamResult = new LinkedHashSet<>();
         for (String name : names) {
-            if("Unknown".equals(nonStreamResult) || nonStreamResult.length() < name.length()) {
-                nonStreamResult = name;
-            }
+            nonStreamResult.add(name);
         }
         System.out.println(nonStreamResult);
     }

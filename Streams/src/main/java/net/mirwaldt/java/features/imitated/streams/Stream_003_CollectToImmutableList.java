@@ -10,24 +10,22 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
+import static java.util.Arrays.asList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_012_CollectToModifiableMap {
+public class Stream_003_CollectToImmutableList {
     public static void main(String[] args) {
-        var ints = List.of(0, 5, 8, 12);
+        var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
-        // we want a modifiable map with the int element as key and its binary representation as value and
-        // remove the entry for the key 5:
+        // we want a list of strings from a string array:
 
         // with stream
-        var streamResult = ints.stream()
-                .collect(toMap(Function.identity(), i -> Integer.toString(i, 2)));
-        streamResult.remove(5);
+        var streamResult = Arrays.stream(names)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));
         System.out.println(streamResult);
 
 
@@ -35,11 +33,7 @@ public class Example_012_CollectToModifiableMap {
 
 
         // without stream
-        var nonStreamResult = new HashMap<>();
-        for (int i : ints) {
-            nonStreamResult.put(i, Integer.toString(i, 2));
-        }
-        nonStreamResult.remove(5);
+        var nonStreamResult = List.copyOf(asList(names));
         System.out.println(nonStreamResult);
     }
 }

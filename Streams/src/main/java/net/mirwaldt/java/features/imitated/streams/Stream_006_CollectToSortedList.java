@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_006_CollectToSortedList {
+public class Stream_006_CollectToSortedList {
     public static void main(String[] args) {
         var names = new String[]{"Heinz", "Marc", "Michael", "Brian", "Marc"};
 

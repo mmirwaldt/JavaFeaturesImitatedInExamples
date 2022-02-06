@@ -10,21 +10,25 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.function.Function;
 
+import static java.util.stream.Collectors.toMap;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_010_CollectToLinkedHashSet {
+public class Stream_015_CollectToLinkedHashMap {
     public static void main(String[] args) {
-        var names = new String[]{"Heinz", "Michael", "Brian", "Marc", "Michael"};
+        var ints = List.of(0, 5, 8, 12);
 
-        // we want a linked hash set of strings from a string array:
+        // we want a linked hash map with the int element as key and its binary representation as value:
 
         // with stream
-        var streamResult = Arrays.stream(names)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        var streamResult = ints.stream()
+                .collect(toMap(Function.identity(),
+                        i -> Integer.toString(i, 2),
+                        (oldVal, newVal) -> newVal, // new values overwrite old values
+                        LinkedHashMap::new));
         System.out.println(streamResult);
 
 
@@ -32,9 +36,9 @@ public class Example_010_CollectToLinkedHashSet {
 
 
         // without stream
-        var nonStreamResult = new LinkedHashSet<>();
-        for (String name : names) {
-            nonStreamResult.add(name);
+        var nonStreamResult = new LinkedHashMap<>();
+        for (int i : ints) {
+            nonStreamResult.put(i, Integer.toString(i, 2));
         }
         System.out.println(nonStreamResult);
     }

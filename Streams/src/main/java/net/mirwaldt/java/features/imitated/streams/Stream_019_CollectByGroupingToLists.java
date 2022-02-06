@@ -16,19 +16,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.groupingBy;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_018_CollectByPartitioning {
-    @SuppressWarnings({"Java8MapApi", "SpellCheckingInspection"})
+public class Stream_019_CollectByGroupingToLists {
+    @SuppressWarnings("Java8MapApi")
     public static void main(String[] args) {
-        List<Integer> ints = List.of(1, 2, 3, 4, 5);
+        List<String> names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want a map where the values are primes if the key is true and no primes if the key is false:
+        // we want a map with the first letter of a name as key and a list of all names with that first letter as value:
 
         // with stream
-        Map<Boolean, List<Integer>> streamResult = ints.stream()
-                .collect(partitioningBy(Example_018_CollectByPartitioning::isPrime, Collectors.toList()));
+        Map<String, List<String>> streamResult = names.stream()
+                .collect(groupingBy(s -> s.substring(0, 1), Collectors.toList()));
         System.out.println(streamResult);
 
 
@@ -36,28 +36,17 @@ public class Example_018_CollectByPartitioning {
 
 
         // without stream
-        Map<Boolean, List<Integer>> nonStreamResult = new HashMap<>();
-        for (int i : ints) {
-            boolean isPrime = isPrime(i);
-            List<Integer> list = nonStreamResult.get(isPrime);
+        Map<String, List<String>> nonStreamResult = new HashMap<>();
+        for (String name : names) {
+            String firstLetter = name.substring(0, 1);
+            List<String> list = nonStreamResult.get(firstLetter);
             if(list == null) {
                 list = new ArrayList<>();
-                nonStreamResult.put(isPrime, list);
+                nonStreamResult.put(firstLetter, list);
             }
-            list.add(i);
+            list.add(name);
         }
         System.out.println(nonStreamResult);
     }
 
-    public static boolean isPrime(int n) {
-        if(n <= 1) {
-            return false;
-        }
-        for (int i = 2; i < n; i++) {
-            if(n % i == 0) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

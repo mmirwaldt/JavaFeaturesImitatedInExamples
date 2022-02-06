@@ -23,7 +23,7 @@ import java.util.stream.Collector.Characteristics;
 
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_031_CollectByCustomCollector {
+public class Stream_031_CollectByCustomCollector {
     public static void main(String[] args) {
         Map<String, List<Integer>> multiMap = Map.of(
                 "M", List.of(1, 2, 3),
@@ -47,8 +47,8 @@ public class Example_031_CollectByCustomCollector {
         // without stream
         Map<Integer, List<String>> nonStreamResult = new LinkedHashMap<>();
         for (Map.Entry<String, List<Integer>> entry : multiMap.entrySet()) {
-            for (Integer element : entry.getValue()) {
-                nonStreamResult.computeIfAbsent(element, (j) -> new ArrayList<>()).add(entry.getKey());
+            for (Integer value : entry.getValue()) {
+                nonStreamResult.computeIfAbsent(value, (j) -> new ArrayList<>()).add(entry.getKey());
             }
         }
         System.out.println(nonStreamResult);
@@ -61,7 +61,7 @@ public class Example_031_CollectByCustomCollector {
     static BiConsumer<Map<Integer, List<String>>, Map.Entry<String, List<Integer>>> accumulator() {
         return (Map<Integer, List<String>> map, Map.Entry<String, List<Integer>> entry) ->
                 entry.getValue().forEach(
-                        i -> map.computeIfAbsent(i, j -> new ArrayList<>())
+                        value -> map.computeIfAbsent(value, j -> new ArrayList<>())
                                 .add(entry.getKey()));
     }
 

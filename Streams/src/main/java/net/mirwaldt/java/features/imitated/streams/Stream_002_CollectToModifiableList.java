@@ -10,23 +10,23 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingInt;
+import static java.util.Arrays.asList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_023_CollectByGroupingToSums {
+public class Stream_002_CollectToModifiableList {
     public static void main(String[] args) {
-        List<Integer> ints = List.of(1, 3, 4, 0, 2, 5, 6);
+        var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
-        // we want a map with the remainder of an int divided by 3 as key and the sum of all ints with the same remainder:
+        // we want a modifiable list of strings from a string array and remove element "Michael":
 
         // with stream
-        Map<Integer, Integer> streamResult = ints.stream()
-                .collect(groupingBy(i -> i % 3, summingInt(i -> i)));
+        var streamResult = Arrays.stream(names)
+                .collect(Collectors.toList());
+        streamResult.remove("Michael");
         System.out.println(streamResult);
 
 
@@ -34,12 +34,8 @@ public class Example_023_CollectByGroupingToSums {
 
 
         // without stream
-        Map<Integer, Integer> nonStreamResult = new HashMap<>();
-        for (int i : ints) {
-            int remainder = i % 3;
-            int sum = nonStreamResult.getOrDefault(remainder, 0);
-            nonStreamResult.put(remainder, sum + i);
-        }
+        var nonStreamResult = new ArrayList<>(asList(names));
+        nonStreamResult.remove("Michael");
         System.out.println(nonStreamResult);
     }
 }

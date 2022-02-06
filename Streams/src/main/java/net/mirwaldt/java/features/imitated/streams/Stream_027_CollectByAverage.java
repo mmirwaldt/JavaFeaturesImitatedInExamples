@@ -10,30 +10,35 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.averagingInt;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_001_CollectToUnmodifiableList {
+public class Stream_027_CollectByAverage {
     public static void main(String[] args) {
-        var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
+        var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want an unmodifiable list of strings from a string array:
+        // we want the longest name:
 
         // with stream
-        var streamResult = Arrays.stream(names)
-                .toList();
+        var streamResult = names.stream()
+                .collect(averagingInt(String::length));
         System.out.println(streamResult);
 
-        
+
         System.out.println(middleLine());
 
 
         // without stream
-        var nonStreamResult = Collections.unmodifiableList(new ArrayList<>(asList(names)));
+        var average = 0d;
+        var count = 0;
+        var sum = 0;
+        for (String name : names) {
+            count++;
+            sum+=name.length();
+        }
+        var nonStreamResult = (double) sum / count;
         System.out.println(nonStreamResult);
     }
 }

@@ -11,21 +11,21 @@
 package net.mirwaldt.java.features.imitated.streams;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_003_CollectToImmutableList {
+public class Stream_009_CollectToImmutableSet {
     public static void main(String[] args) {
-        var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
+        var names = new String[]{"Heinz", "Michael", "Brian", "Marc", "Michael"};
 
-        // we want a list of strings from a string array:
+        // we want an unmodifiable set of strings from a string array:
 
         // with stream
         var streamResult = Arrays.stream(names)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));
+                .collect(Collectors.collectingAndThen(Collectors.toSet(), Set::copyOf));
         System.out.println(streamResult);
 
 
@@ -33,7 +33,11 @@ public class Example_003_CollectToImmutableList {
 
 
         // without stream
-        var nonStreamResult = List.copyOf(asList(names));
+        var nonStreamSet = new HashSet<>();
+        for (String name : names) {
+            nonStreamSet.add(name);
+        }
+        var nonStreamResult = Set.copyOf(nonStreamSet);
         System.out.println(nonStreamResult);
     }
 }

@@ -11,24 +11,21 @@
 package net.mirwaldt.java.features.imitated.streams;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.filtering;
+import static java.util.stream.Collectors.toList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_019_CollectByGroupingToLists {
-    @SuppressWarnings("Java8MapApi")
+public class Stream_029_CollectByFiltering {
     public static void main(String[] args) {
-        List<String> names = List.of("Heinz", "Michael", "Brian", "Marc");
+        var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want a map with the first letter of a name as key and a list of all names with that first letter as value:
+        // we want a list with only names starting with "M":
 
         // with stream
-        Map<String, List<String>> streamResult = names.stream()
-                .collect(groupingBy(s -> s.substring(0, 1), Collectors.toList()));
+        var streamResult = names.stream()
+                .collect(filtering(name -> name.startsWith("M"), toList()));
         System.out.println(streamResult);
 
 
@@ -36,17 +33,12 @@ public class Example_019_CollectByGroupingToLists {
 
 
         // without stream
-        Map<String, List<String>> nonStreamResult = new HashMap<>();
+        var nonStreamResult = new ArrayList<>();
         for (String name : names) {
-            String firstLetter = name.substring(0, 1);
-            List<String> list = nonStreamResult.get(firstLetter);
-            if(list == null) {
-                list = new ArrayList<>();
-                nonStreamResult.put(firstLetter, list);
+            if(name.startsWith("M")) {
+                nonStreamResult.add(name);
             }
-            list.add(name);
         }
         System.out.println(nonStreamResult);
     }
-
 }

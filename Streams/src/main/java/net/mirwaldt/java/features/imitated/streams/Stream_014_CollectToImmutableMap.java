@@ -10,21 +10,24 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
-import static java.util.stream.Collectors.minBy;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toMap;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_025_CollectByMin {
+public class Stream_014_CollectToImmutableMap {
     public static void main(String[] args) {
-        var names = List.of("Heinz", "Michael", "Brian", "Marc");
+        var ints = List.of(0, 5, 8, 12);
 
-        // we want the longest name:
+        // we want an immutable map with the int element as key and its binary representation as value:
 
         // with stream
-        var streamResult = names.stream()
-                .collect(minBy(Comparator.comparingInt(String::length))).orElse("Unknown");
+        var streamResult = ints.stream()
+                .collect(collectingAndThen(toMap(Function.identity(), i -> Integer.toString(i, 2)), Map::copyOf));
         System.out.println(streamResult);
 
 
@@ -32,12 +35,11 @@ public class Example_025_CollectByMin {
 
 
         // without stream
-        var nonStreamResult = "Unknown";
-        for (String name : names) {
-            if("Unknown".equals(nonStreamResult) || name.length() < nonStreamResult.length()) {
-                nonStreamResult = name;
-            }
+        var nonStreamMap = new HashMap<>();
+        for (int i : ints) {
+            nonStreamMap.put(i, Integer.toString(i, 2));
         }
+        var nonStreamResult = Map.copyOf(nonStreamMap);
         System.out.println(nonStreamResult);
     }
 }

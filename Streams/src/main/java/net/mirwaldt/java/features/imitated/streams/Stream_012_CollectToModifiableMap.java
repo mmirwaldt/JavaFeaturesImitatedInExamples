@@ -10,24 +10,24 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toMap;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_022_CollectByGroupingToMapped {
+public class Stream_012_CollectToModifiableMap {
     public static void main(String[] args) {
-        var names = List.of("Heinz", "Michael", "Brian", "Marc");
+        var ints = List.of(0, 5, 8, 12);
 
-        // we want a map with the first letter of a name as key and a list of all names in upper case
-        // with that first letter as value:
+        // we want a modifiable map with the int element as key and its binary representation as value and
+        // remove the entry for the key 5:
 
         // with stream
-        Map<String, List<String>> streamResult = names.stream()
-                .collect(groupingBy(name -> name.substring(0, 1), mapping(String::toUpperCase, toList())));
+        var streamResult = ints.stream()
+                .collect(toMap(Function.identity(), i -> Integer.toString(i, 2)));
+        streamResult.remove(5);
         System.out.println(streamResult);
 
 
@@ -35,16 +35,11 @@ public class Example_022_CollectByGroupingToMapped {
 
 
         // without stream
-        Map<String, List<String>> nonStreamResult = new HashMap<>();
-        for (String name : names) {
-            String firstLetter = name.substring(0, 1);
-            List<String> list = nonStreamResult.get(firstLetter);
-            if(list == null) {
-                list = new ArrayList<>();
-                nonStreamResult.put(firstLetter, list);
-            }
-            list.add(name.toUpperCase());
+        var nonStreamResult = new HashMap<>();
+        for (int i : ints) {
+            nonStreamResult.put(i, Integer.toString(i, 2));
         }
+        nonStreamResult.remove(5);
         System.out.println(nonStreamResult);
     }
 }

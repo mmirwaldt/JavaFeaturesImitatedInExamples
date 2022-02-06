@@ -10,23 +10,22 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
-import static java.util.stream.Collectors.toUnmodifiableMap;
+import static java.util.stream.Collectors.flatMapping;
+import static java.util.stream.Collectors.toList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_013_CollectToUnmodifiableMap {
+public class Stream_030_CollectByFlatMapping {
     public static void main(String[] args) {
-        var ints = List.of(0, 5, 8, 12);
+        var intLists = List.of(List.of(1, 3, 4), List.of(5), List.of(0, 2));
 
-        // we want an unmodifiable map with the int element as key and its binary representation as value:
+        // we want a list of ints from a list of list of ints:
 
         // with stream
-        var streamResult = ints.stream()
-                .collect(toUnmodifiableMap(Function.identity(), i -> Integer.toString(i, 2)));
+        var streamResult = intLists.stream()
+                .collect(flatMapping(List::stream, toList()));
         System.out.println(streamResult);
 
 
@@ -34,11 +33,10 @@ public class Example_013_CollectToUnmodifiableMap {
 
 
         // without stream
-        var nonStreamMap = new HashMap<>();
-        for (int i : ints) {
-            nonStreamMap.put(i, Integer.toString(i, 2));
+        var nonStreamResult = new ArrayList<>();
+        for (var intList : intLists) {
+            nonStreamResult.addAll(intList);
         }
-        var nonStreamResult = Collections.unmodifiableMap(nonStreamMap);
         System.out.println(nonStreamResult);
     }
 }

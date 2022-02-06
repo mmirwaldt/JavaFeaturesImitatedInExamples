@@ -10,22 +10,21 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.function.Function;
 
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.maxBy;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_016_CollectToSortedMap {
+public class Stream_026_CollectByMax {
     public static void main(String[] args) {
-        var ints = List.of(0, 5, 8, 12);
+        var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want a sorted map with the int element as key and its binary representation as value:
+        // we want the longest name:
 
         // with stream
-        var streamResult = ints.stream()
-                .collect(toMap(Function.identity(), i -> Integer.toString(i, 2), (v1, v2) -> null, TreeMap::new));
+        var streamResult = names.stream()
+                .collect(maxBy(Comparator.comparingInt(String::length))).orElse("Unknown");
         System.out.println(streamResult);
 
 
@@ -33,9 +32,11 @@ public class Example_016_CollectToSortedMap {
 
 
         // without stream
-        var nonStreamResult = new TreeMap<>();
-        for (int i : ints) {
-            nonStreamResult.put(i, Integer.toString(i, 2));
+        var nonStreamResult = "Unknown";
+        for (String name : names) {
+            if("Unknown".equals(nonStreamResult) || nonStreamResult.length() < name.length()) {
+                nonStreamResult = name;
+            }
         }
         System.out.println(nonStreamResult);
     }

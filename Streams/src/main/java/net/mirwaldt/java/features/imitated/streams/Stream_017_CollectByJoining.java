@@ -10,24 +10,20 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_020_CollectByGroupingToCounts {
-    @SuppressWarnings("SpellCheckingInspection")
+public class Stream_017_CollectByJoining {
     public static void main(String[] args) {
-        List<Integer> ints = List.of(0, 2, 1, 1, 2, 2);
+        List<String> lines = List.of("First line", "Second line", "Third line", "Last line");
 
-        // we want a map with the int element as key and its frequency in the int list as value:
+        // we want a text in which all lines were joined by the system line separator (e.g. '\n' in linux):
 
         // with stream
-        Map<Integer, Long> streamResult = ints.stream()
-                .collect(groupingBy(i -> i, counting()));
+        String streamResult = lines.stream()
+                .collect(joining(System.lineSeparator()));
         System.out.println(streamResult);
 
 
@@ -35,11 +31,17 @@ public class Example_020_CollectByGroupingToCounts {
 
 
         // without stream
-        Map<Integer, Long> nonStreamResult = new HashMap<>();
-        for (int i : ints) {
-            long count = nonStreamResult.getOrDefault(i, 0L);
-            nonStreamResult.put(i, count + 1);
+        StringBuilder nonStreamResultBuilder = new StringBuilder();
+        boolean isFirstLine = true;
+        for (String line : lines) {
+            if(isFirstLine) {
+                isFirstLine = false;
+            } else {
+                nonStreamResultBuilder.append(System.lineSeparator());
+            }
+            nonStreamResultBuilder.append(line);
         }
+        String nonStreamResult = nonStreamResultBuilder.toString();
         System.out.println(nonStreamResult);
     }
 }

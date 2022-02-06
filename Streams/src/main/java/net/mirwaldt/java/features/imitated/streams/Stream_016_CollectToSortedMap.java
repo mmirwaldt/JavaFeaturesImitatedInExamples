@@ -11,19 +11,21 @@
 package net.mirwaldt.java.features.imitated.streams;
 
 import java.util.List;
+import java.util.TreeMap;
+import java.util.function.Function;
 
-import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toMap;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_017_CollectByJoining {
+public class Stream_016_CollectToSortedMap {
     public static void main(String[] args) {
-        List<String> lines = List.of("First line", "Second line", "Third line", "Last line");
+        var ints = List.of(0, 5, 8, 12);
 
-        // we want a text in which all lines were joined by the system line separator (e.g. '\n' in linux):
+        // we want a sorted map with the int element as key and its binary representation as value:
 
         // with stream
-        String streamResult = lines.stream()
-                .collect(joining(System.lineSeparator()));
+        var streamResult = ints.stream()
+                .collect(toMap(Function.identity(), i -> Integer.toString(i, 2), (v1, v2) -> null, TreeMap::new));
         System.out.println(streamResult);
 
 
@@ -31,17 +33,10 @@ public class Example_017_CollectByJoining {
 
 
         // without stream
-        StringBuilder nonStreamResultBuilder = new StringBuilder();
-        boolean isFirstLine = true;
-        for (String line : lines) {
-            if(isFirstLine) {
-                isFirstLine = false;
-            } else {
-                nonStreamResultBuilder.append(System.lineSeparator());
-            }
-            nonStreamResultBuilder.append(line);
+        var nonStreamResult = new TreeMap<>();
+        for (int i : ints) {
+            nonStreamResult.put(i, Integer.toString(i, 2));
         }
-        String nonStreamResult = nonStreamResultBuilder.toString();
         System.out.println(nonStreamResult);
     }
 }

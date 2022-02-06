@@ -10,20 +10,23 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static java.util.stream.Collectors.averagingInt;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_027_CollectByAverage {
+public class Stream_021_CollectByGroupingToJoins {
     public static void main(String[] args) {
         var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want the longest name:
+        // we want a map with the first letter of a name as key and all names concatenated by ',' to a string as value:
 
         // with stream
-        var streamResult = names.stream()
-                .collect(averagingInt(String::length));
+        Map<String, String> streamResult = names.stream()
+                .collect(groupingBy(name -> name.substring(0, 1), joining(", ")));
         System.out.println(streamResult);
 
 
@@ -31,14 +34,16 @@ public class Example_027_CollectByAverage {
 
 
         // without stream
-        var average = 0d;
-        var count = 0;
-        var sum = 0;
+        Map<String, String> nonStreamResult = new HashMap<>();
         for (String name : names) {
-            count++;
-            sum+=name.length();
+            String firstLetter = name.substring(0, 1);
+            String nameList = nonStreamResult.getOrDefault(firstLetter, "");
+            if(nameList.isEmpty()) {
+                nonStreamResult.put(firstLetter, name);
+            } else {
+                nonStreamResult.put(firstLetter, nameList + ", " + name);
+            }
         }
-        var nonStreamResult = (double) sum / count;
         System.out.println(nonStreamResult);
     }
 }

@@ -10,36 +10,30 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toMap;
+import static java.util.Arrays.asList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_014_CollectToImmutableMap {
+public class Stream_001_CollectToUnmodifiableList {
     public static void main(String[] args) {
-        var ints = List.of(0, 5, 8, 12);
+        var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
-        // we want an immutable map with the int element as key and its binary representation as value:
+        // we want an unmodifiable list of strings from a string array:
 
         // with stream
-        var streamResult = ints.stream()
-                .collect(collectingAndThen(toMap(Function.identity(), i -> Integer.toString(i, 2)), Map::copyOf));
+        var streamResult = Arrays.stream(names)
+                .toList();
         System.out.println(streamResult);
 
-
+        
         System.out.println(middleLine());
 
 
         // without stream
-        var nonStreamMap = new HashMap<>();
-        for (int i : ints) {
-            nonStreamMap.put(i, Integer.toString(i, 2));
-        }
-        var nonStreamResult = Map.copyOf(nonStreamMap);
+        var nonStreamResult = Collections.unmodifiableList(new ArrayList<>(asList(names)));
         System.out.println(nonStreamResult);
     }
 }

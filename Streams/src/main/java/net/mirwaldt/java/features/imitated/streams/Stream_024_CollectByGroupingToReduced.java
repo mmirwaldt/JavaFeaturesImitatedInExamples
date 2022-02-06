@@ -15,18 +15,19 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.reducing;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_021_CollectByGroupingToJoins {
+public class Stream_024_CollectByGroupingToReduced {
     public static void main(String[] args) {
         var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want a map with the first letter of a name as key and all names concatenated by ',' to a string as value:
+        // we want a map with the first letter of a name as key and the longest name with that first letter as value:
 
         // with stream
         Map<String, String> streamResult = names.stream()
-                .collect(groupingBy(name -> name.substring(0, 1), joining(", ")));
+                .collect(groupingBy(name -> name.substring(0, 1),
+                        reducing("", Stream_024_CollectByGroupingToReduced::longestName)));
         System.out.println(streamResult);
 
 
@@ -37,13 +38,17 @@ public class Example_021_CollectByGroupingToJoins {
         Map<String, String> nonStreamResult = new HashMap<>();
         for (String name : names) {
             String firstLetter = name.substring(0, 1);
-            String nameList = nonStreamResult.getOrDefault(firstLetter, "");
-            if(nameList.isEmpty()) {
+            String oldName = nonStreamResult.getOrDefault(firstLetter, "");
+            if (oldName.isEmpty()) {
                 nonStreamResult.put(firstLetter, name);
             } else {
-                nonStreamResult.put(firstLetter, nameList + ", " + name);
+                nonStreamResult.put(firstLetter, longestName(oldName, name));
             }
         }
         System.out.println(nonStreamResult);
+    }
+
+    private static String longestName(String left, String right) {
+        return left.length() < right.length() ? right : left;
     }
 }

@@ -10,24 +10,21 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.minBy;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_004_CollectToLinkedList {
+public class Stream_025_CollectByMin {
     public static void main(String[] args) {
-        var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
+        var names = List.of("Heinz", "Michael", "Brian", "Marc");
 
-        // we want a modifiable linked list of strings from a string array and remove element "Michael":
+        // we want the longest name:
 
         // with stream
-        var streamResult = Arrays.stream(names)
-                .collect(Collectors.toCollection(LinkedList::new));
-        streamResult.remove("Michael");
-        System.out.println(streamResult.getClass());
+        var streamResult = names.stream()
+                .collect(minBy(Comparator.comparingInt(String::length))).orElse("Unknown");
         System.out.println(streamResult);
 
 
@@ -35,9 +32,12 @@ public class Example_004_CollectToLinkedList {
 
 
         // without stream
-        var nonStreamResult = new LinkedList<>(asList(names));
-        nonStreamResult.remove("Michael");
-        System.out.println(nonStreamResult.getClass());
+        var nonStreamResult = "Unknown";
+        for (String name : names) {
+            if("Unknown".equals(nonStreamResult) || name.length() < nonStreamResult.length()) {
+                nonStreamResult = name;
+            }
+        }
         System.out.println(nonStreamResult);
     }
 }

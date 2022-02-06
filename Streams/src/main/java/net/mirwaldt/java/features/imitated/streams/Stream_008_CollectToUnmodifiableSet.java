@@ -10,22 +10,22 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_015_CollectToLinkedHashMap {
+public class Stream_008_CollectToUnmodifiableSet {
     public static void main(String[] args) {
-        var ints = List.of(0, 5, 8, 12);
+        var names = new String[]{"Heinz", "Michael", "Brian", "Marc", "Michael"};
 
-        // we want a linked hash map with the int element as key and its binary representation as value:
+        // we want an unmodifiable set of strings from a string array:
 
         // with stream
-        var streamResult = ints.stream()
-                .collect(toMap(Function.identity(), i -> Integer.toString(i, 2), (v1, v2) -> null, LinkedHashMap::new));
+        var streamResult = Arrays.stream(names)
+                .collect(Collectors.toUnmodifiableSet());
         System.out.println(streamResult);
 
 
@@ -33,10 +33,11 @@ public class Example_015_CollectToLinkedHashMap {
 
 
         // without stream
-        var nonStreamResult = new LinkedHashMap<>();
-        for (int i : ints) {
-            nonStreamResult.put(i, Integer.toString(i, 2));
+        var nonStreamSet = new HashSet<>();
+        for (String name : names) {
+            nonStreamSet.add(name);
         }
+        var nonStreamResult = Collections.unmodifiableSet(nonStreamSet);
         System.out.println(nonStreamResult);
     }
 }

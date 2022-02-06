@@ -10,22 +10,24 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_005_CollectToDistinctList {
+public class Stream_004_CollectToLinkedList {
     public static void main(String[] args) {
-        var names = new String[]{"Heinz", "Marc", "Michael", "Brian", "Marc"};
+        var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
-        // we want a modifiable, distinct list of strings from a string array:
+        // we want a modifiable linked list of strings from a string array and remove element "Michael":
 
         // with stream
         var streamResult = Arrays.stream(names)
-                .distinct()
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(LinkedList::new));
+        streamResult.remove("Michael");
+        System.out.println(streamResult.getClass());
         System.out.println(streamResult);
 
 
@@ -33,12 +35,9 @@ public class Example_005_CollectToDistinctList {
 
 
         // without stream
-        var nonStreamResult = new ArrayList<>();
-        for (String name : names) {
-            if(!nonStreamResult.contains(name)) {
-                nonStreamResult.add(name);
-            }
-        }
+        var nonStreamResult = new LinkedList<>(asList(names));
+        nonStreamResult.remove("Michael");
+        System.out.println(nonStreamResult.getClass());
         System.out.println(nonStreamResult);
     }
 }

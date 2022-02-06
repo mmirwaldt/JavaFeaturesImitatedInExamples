@@ -10,22 +10,23 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.ArrayList;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 
-import static java.util.stream.Collectors.flatMapping;
-import static java.util.stream.Collectors.toList;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.util.stream.Collectors.summarizingInt;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Example_030_CollectByFlatMapping {
+public class Stream_028_CollectBySummarizingInts {
     public static void main(String[] args) {
-        var intLists = List.of(List.of(1, 3, 4), List.of(5), List.of(0, 2));
+        List<Integer> ints = List.of(1, 3, 4, 0, 2, 5, 6);
 
-        // we want a list of ints from a list of list of ints:
+        // we want a map with the remainder of an int divided by 3 as key and the sum of all ints with the same remainder:
 
         // with stream
-        var streamResult = intLists.stream()
-                .collect(flatMapping(List::stream, toList()));
+        var streamResult = ints.stream()
+                .collect(summarizingInt(i -> i));
         System.out.println(streamResult);
 
 
@@ -33,10 +34,17 @@ public class Example_030_CollectByFlatMapping {
 
 
         // without stream
-        var nonStreamResult = new ArrayList<>();
-        for (var intList : intLists) {
-            nonStreamResult.addAll(intList);
+        long count = 0L;
+        long sum = 0L;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int i : ints) {
+            count++;
+            sum += i;
+            min = min(min, i);
+            max = max(max, i);
         }
+        IntSummaryStatistics nonStreamResult = new IntSummaryStatistics(count, min, max, sum);
         System.out.println(nonStreamResult);
     }
 }
