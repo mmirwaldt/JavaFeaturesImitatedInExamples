@@ -30,18 +30,12 @@ public class CompletableFuture_001_runAsync {
 
 
         // without CompletableFuture
-        if (ForkJoinPool.getCommonPoolParallelism() > 1) {
-            ForkJoinPool commonPool = ForkJoinPool.commonPool();
-            CountDownLatch countDownLatch = new CountDownLatch(1);
-            commonPool.execute(() -> {
-                printHelloWorld.run();
-                countDownLatch.countDown();
-            });
-            countDownLatch.await();
-        } else {
-            Thread thread = new Thread(printHelloWorld);
-            thread.start();
-            thread.join();
-        }
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        commonPool.execute(() -> {
+            printHelloWorld.run();
+            countDownLatch.countDown();
+        });
+        countDownLatch.await();
     }
 }
