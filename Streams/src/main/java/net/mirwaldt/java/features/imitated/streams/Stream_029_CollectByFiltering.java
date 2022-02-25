@@ -11,6 +11,7 @@
 package net.mirwaldt.java.features.imitated.streams;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.filtering;
@@ -35,7 +36,7 @@ public class Stream_029_CollectByFiltering {
         // without stream
         var nonStreamResult = new ArrayList<>();
         for (String name : names) {
-            if(name.startsWith("M")) {
+            if (name.startsWith("M")) {
                 nonStreamResult.add(name);
             }
         }
