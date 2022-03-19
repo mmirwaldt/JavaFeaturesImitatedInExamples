@@ -10,10 +10,7 @@
 
 package net.mirwaldt.java.features.imitated.streams;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -48,7 +45,7 @@ public class Stream_031_CollectByCustomCollector {
         Map<Integer, List<String>> nonStreamResult = new LinkedHashMap<>();
         for (Map.Entry<String, List<Integer>> entry : multiMap.entrySet()) {
             for (Integer value : entry.getValue()) {
-                nonStreamResult.computeIfAbsent(value, (j) -> new ArrayList<>()).add(entry.getKey());
+                nonStreamResult.computeIfAbsent(value, j -> new ArrayList<>()).add(entry.getKey());
             }
         }
         System.out.println(nonStreamResult);
@@ -66,7 +63,10 @@ public class Stream_031_CollectByCustomCollector {
     }
 
     static BinaryOperator<Map<Integer, List<String>>> combiner() {
-        return (a, b) -> null; // we don't implement the combiner because our stream does not run in parallel
+        return (leftMap, rightMap) -> new LinkedHashMap<>() {{
+            putAll(leftMap);
+            putAll(rightMap);
+        }};
     }
 
     static Function<Map<Integer, List<String>>, Map<Integer, List<String>>> finisher() {
