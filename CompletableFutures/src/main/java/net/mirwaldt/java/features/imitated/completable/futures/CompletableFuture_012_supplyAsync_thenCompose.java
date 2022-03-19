@@ -10,11 +10,13 @@
 
 package net.mirwaldt.java.features.imitated.completable.futures;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import static net.mirwaldt.java.features.imitated.completable.futures.util.Utils.callUnchecked;
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
 public class CompletableFuture_012_supplyAsync_thenCompose {
@@ -34,23 +36,9 @@ public class CompletableFuture_012_supplyAsync_thenCompose {
 
 
         // without CompletableFuture
-        if (ForkJoinPool.getCommonPoolParallelism() > 1) {
-            ForkJoinPool commonPool = ForkJoinPool.commonPool();
-            Future<String> supplyAsyncFuture = commonPool.submit(stringSupplier::get);
-            Future<String> thenComposeFuture = commonPool.submit(() -> stringOperator.apply(supplyAsyncFuture.get()));
-            System.out.println(thenComposeFuture.get());
-        } else {
-            BlockingQueue<String> supplyAsyncQueue = new ArrayBlockingQueue<>(1);
-            Thread supplyAsyncThread = new Thread(() -> supplyAsyncQueue.offer(stringSupplier.get()));
-            supplyAsyncThread.start();
-            BlockingQueue<String> thenComposeQueue = new ArrayBlockingQueue<>(1);
-            Thread thenComposeThread = new Thread(() -> {
-                String previousResult = callUnchecked(() -> supplyAsyncQueue.take());
-                thenComposeQueue.offer(stringOperator.apply(previousResult));
-            });
-            thenComposeThread.start();
-            thenComposeThread.join();
-            System.out.println(thenComposeQueue.take());
-        }
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+        Future<String> supplyAsyncFuture = commonPool.submit(stringSupplier::get);
+        Future<String> thenComposeFuture = commonPool.submit(() -> stringOperator.apply(supplyAsyncFuture.get()));
+        System.out.println(thenComposeFuture.get());
     }
 }
