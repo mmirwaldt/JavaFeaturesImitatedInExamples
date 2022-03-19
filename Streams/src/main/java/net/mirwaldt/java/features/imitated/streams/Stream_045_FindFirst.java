@@ -19,6 +19,8 @@ public class Stream_045_FindFirst {
     public static void main(String[] args) {
         var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
+        // we want the first element
+
         // with stream
         var streamResult = Arrays.stream(names)
                 .findFirst();

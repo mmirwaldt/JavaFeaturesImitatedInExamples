@@ -19,6 +19,8 @@ public class Stream_046_FindFirstFiltered {
     public static void main(String[] args) {
         var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
+        // we want the first name which starts with the letter "M"
+
         // with stream
         var streamResult = Arrays.stream(names)
                 .filter(s -> s.startsWith("M"))

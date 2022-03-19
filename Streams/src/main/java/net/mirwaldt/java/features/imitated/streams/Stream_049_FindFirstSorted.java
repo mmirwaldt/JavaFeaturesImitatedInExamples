@@ -18,6 +18,8 @@ public class Stream_049_FindFirstSorted {
     public static void main(String[] args) {
         var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
+        // we want the first name in the alphabetical order
+
         // with stream
         var streamResult = Arrays.stream(names)
                 .sorted()

@@ -21,6 +21,8 @@ public class Stream_048_FindFirstSkipped {
     public static void main(String[] args) {
         var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
+        // we want the first name after the first two names
+
         // with stream
         var streamResult = Arrays.stream(names)
                 .skip(2)

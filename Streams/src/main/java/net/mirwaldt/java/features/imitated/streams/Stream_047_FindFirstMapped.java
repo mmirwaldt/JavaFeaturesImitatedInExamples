@@ -19,6 +19,8 @@ public class Stream_047_FindFirstMapped {
     public static void main(String[] args) {
         var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
+        // we want the first name in upper case
+
         // with stream
         var streamResult = Arrays.stream(names)
                 .map(String::toUpperCase)
