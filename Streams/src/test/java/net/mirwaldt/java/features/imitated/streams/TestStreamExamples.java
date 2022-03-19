@@ -23,13 +23,8 @@ import static net.mirwaldt.java.features.imitated.util.TestUtils.argumentsForPac
 
 @SuppressWarnings("unused")
 public class TestStreamExamples {
-    private final static List<String> exceptions = List.of(
-            Example_008_CollectToUnmodifiableSet.class.getName(),
-            Example_013_CollectToUnmodifiableMap.class.getName()
-    );
-
     public static Stream<Arguments> streamExamples() {
-        return argumentsForPackage(TestStreamExamples.class.getPackageName(), exceptions);
+        return argumentsForPackage(TestStreamExamples.class.getPackageName(), List.of());
     }
 
     @ParameterizedTest(name = "{index}: {0}, isException={1}")
