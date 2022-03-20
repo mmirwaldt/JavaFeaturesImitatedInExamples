@@ -11,13 +11,11 @@
 package net.mirwaldt.java.features.imitated.streams;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 import static net.mirwaldt.java.features.imitated.util.Utils.middleLine;
 
-public class Stream_048_FindFirstSkipped {
+public class Stream_048_FindFirstAfterSkip {
     public static void main(String[] args) {
         var names = new String[]{"Heinz", "Michael", "Brian", "Marc"};
 
